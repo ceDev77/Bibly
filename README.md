@@ -71,4 +71,4 @@ Páginas (Administrador):
 - Página de detalhes/ edição do livro
 - Página de histórico de movimentações
 
-O protótipo descrito (apenas o módulo de usuário) acima pode ser encontrado em: 
+O protótipo descrito (apenas o módulo de usuário) acima pode ser encontrado em: https://cedev77.github.io/bibly-proto/
