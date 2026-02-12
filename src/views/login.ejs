@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bibly</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link active">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <h1>Login</h1>
+                <p>Acesse sua conta no Bibly</p>
+            </header>
+
+            <div class="form-container">
+                <div class="login-header">
+                    <i class="fas fa-user-circle login-icon"></i>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="loginEmail">
+                            <i class="fas fa-envelope"></i> E-mail
+                        </label>
+                        <input type="email" id="loginEmail" name="email" class="form-control" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">
+                            <i class="fas fa-lock"></i> Senha
+                        </label>
+                        <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Sua senha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            Lembrar de mim
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i> Entrar
+                        </button>
+                        
+                        <div class="login-links">
+                            <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+                        </div>
+                        
+                        <div class="register-prompt">
+                            <p>Não possui uma conta? <a href="/usuarios/novo" class="register-link">Cadastre-se aqui</a></p>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/login.js"></script>
+</body>
+</html>

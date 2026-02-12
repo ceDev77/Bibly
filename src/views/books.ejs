@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros - Bibly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link <%= activePage === 'books' ? 'active' : '' %>">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link <%= activePage === 'loans' ? 'active' : '' %>">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link <%= activePage === 'returns' ? 'active' : '' %>">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link user-logged" onclick="return false;">
+                        <i class="fas fa-user"></i> <%= user.name %> <span class="user-status"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros/novo" class="nav-link">
+                        <i class="fas fa-plus"></i> Novo Livro
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <h1>Catálogo de Livros</h1>
+                <p>Explore nossa coleção de livros disponíveis</p>
+            </header>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, autor ou categoria...">
+                    <button class="search-btn" onclick="searchBooks()">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <div class="filters">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Todas as Categorias</option>
+                        <option value="literatura">Literatura</option>
+                        <option value="ficcao">Ficção</option>
+                        <option value="romance">Romance</option>
+                        <option value="historia">História</option>
+                        <option value="ciencia">Ciência</option>
+                        <option value="tecnologia">Tecnologia</option>
+                        <option value="biografia">Biografia</option>
+                    </select>
+                    
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">Todos os Status</option>
+                        <option value="disponivel">Disponível</option>
+                        <option value="emprestado">Emprestado</option>
+                        <option value="reservado">Reservado</option>
+                    </select>
+                    
+                    <select id="sortBy" class="filter-select">
+                        <option value="title">Ordenar por Título</option>
+                        <option value="author">Ordenar por Autor</option>
+                        <option value="year">Ordenar por Ano</option>
+                        <option value="category">Ordenar por Categoria</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="books-container">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="booksGrid">
+                    <% if (books && books.length > 0) { %>
+                        <% books.forEach(book => { %>
+                            <a href="/livros/<%= book.id %>" class="bg-white rounded-lg shadow-sm ring-1 ring-gray-200 overflow-hidden hover:shadow-md hover:ring-gray-300 transition">
+                                <img class="w-full aspect-[3/4] object-cover" src="<%= book.image_url || '/images/default-book.jpg' %>" alt="<%= book.title %>">
+                                <div class="p-3">
+                                    <h3 class="text-sm font-semibold text-gray-900"><%= book.title %></h3>
+                                </div>
+                            </a>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="text-gray-600">Nenhum livro cadastrado no momento.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button class="btn btn-secondary" id="prevPage" onclick="changePage(-1)">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <span class="page-info" id="pageInfo">Página 1 de 5</span>
+                <button class="btn btn-secondary" id="nextPage" onclick="changePage(1)">
+                    Próxima <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/books.js"></script>
+</body>
+</html>

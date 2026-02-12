@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Livro - Bibly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link <%= activePage === 'books' ? 'active' : '' %>">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link <%= activePage === 'loans' ? 'active' : '' %>">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link <%= activePage === 'returns' ? 'active' : '' %>">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link user-logged" onclick="return false;">
+                        <i class="fas fa-user"></i> <%= user.name %> <span class="user-status"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <h1>Cadastro de Livro</h1>
+                <p>Preencha os dados para cadastrar um novo livro</p>
+            </header>
+
+            <div class="form-container">
+                <form id="bookForm" class="register-form" method="post" action="/livros">
+                    <div class="form-group">
+                        <label for="title">
+                            <i class="fas fa-book"></i> Título
+                        </label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="author">
+                            <i class="fas fa-user"></i> Autor
+                        </label>
+                        <input type="text" id="author" name="author" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year">
+                            <i class="fas fa-calendar"></i> Ano
+                        </label>
+                        <input type="number" id="year" name="year" class="form-control" min="0" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">
+                            <i class="fas fa-tag"></i> Categoria
+                        </label>
+                        <input type="text" id="category" name="category" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="isbn">
+                            <i class="fas fa-barcode"></i> ISBN
+                        </label>
+                        <input type="text" id="isbn" name="isbn" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url">
+                            <i class="fas fa-image"></i> URL da Imagem
+                        </label>
+                        <input type="url" id="image_url" name="image_url" class="form-control" placeholder="https://...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-plus"></i> Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

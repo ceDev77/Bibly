@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Livro - Bibly</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link user-logged" onclick="return false;">
+                        <i class="fas fa-user"></i> Usuário Teste <span class="user-status"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/usuarios/novo" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Cadastrar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/">Dashboard</a> > 
+                <a href="/livros">Livros</a> > 
+                <span>Detalhes do Livro</span>
+            </div>
+
+            <div class="book-details-container">
+                <div class="book-details-grid">
+                    <div class="book-image-section">
+                        <img id="bookImage" src="/images/Dom-Casmurro-Capa-do-Livro-1-machado_de_assis-2900279676.jpg" alt="Dom Casmurro" class="book-cover-large">
+                        <div class="book-actions">
+                            <button class="btn btn-primary btn-full" onclick="requestLoan()">
+                                <i class="fas fa-handshake"></i> Solicitar Empréstimo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="book-info-section">
+                        <div class="book-header">
+                            <h1 id="bookTitle">Carregando título...</h1>
+                            <p class="book-author" id="bookAuthor">Carregando autor...</p>
+                        </div>
+
+                        <div class="book-meta">
+                            <div class="meta-item">
+                                <strong>ISBN:</strong>
+                                <span id="bookISBN">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Categoria:</strong>
+                                <span id="bookCategory" class="category-tag">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Ano de Publicação:</strong>
+                                <span id="bookYear">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Editora:</strong>
+                                <span id="bookPublisher">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Páginas:</strong>
+                                <span id="bookPages">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Status:</strong>
+                                <span id="bookStatus" class="status-badge">-</span>
+                            </div>
+                        </div>
+
+                        <div class="book-description">
+                            <h3>Sinopse</h3>
+                            <p id="bookDescription">Carregando descrição...</p>
+                        </div>
+
+                        <div class="book-availability">
+                            <h3>Disponibilidade</h3>
+                            <div class="availability-info">
+                                <div class="availability-item">
+                                    <i class="fas fa-book"></i>
+                                    <span>Exemplares Totais: <strong id="totalCopies">-</strong></span>
+                                </div>
+                                <div class="availability-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Disponíveis: <strong id="availableCopies">-</strong></span>
+                                </div>
+                                <div class="availability-item">
+                                    <i class="fas fa-handshake"></i>
+                                    <span>Emprestados: <strong id="loanedCopies">-</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/book-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibly - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link <%= activePage === 'books' ? 'active' : '' %>">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link <%= activePage === 'loans' ? 'active' : '' %>">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link <%= activePage === 'returns' ? 'active' : '' %>">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link user-logged" onclick="return false;">
+                        <i class="fas fa-user"></i> <%= user.name %> <span class="user-status"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/usuarios/novo" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Cadastrar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <h1>Dashboard</h1>
+                <p>Bem-vindo ao Bibly, <%= user.name %></p>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3><%= stats.totalBooks %></h3>
+                        <p>Livros Disponíveis</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3><%= stats.activeLoans %></h3>
+                        <p>Empréstimos Ativos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-sections">
+                <section class="recent-books">
+                    <h2>Livros Recém Adicionados</h2>
+                    <div class="books-grid">
+                        <% if (recentBooks.length > 0) { %>
+                            <% recentBooks.forEach(book => { %>
+                                <div class="book-card">
+                                    <img src="<%= book.image_url || '/images/default-book.jpg' %>" alt="<%= book.title %>">
+                                    <h3><%= book.title %></h3>
+                                    <p><%= book.author %></p>
+                                    <a href="/livros/<%= book.id %>" class="btn btn-primary">Ver Detalhes</a>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p>Nenhum livro cadastrado no momento.</p>
+                        <% } %>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

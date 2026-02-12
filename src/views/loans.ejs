@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empréstimos - Bibly</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i>
+                <span>Bibly</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/livros" class="nav-link">
+                        <i class="fas fa-book-open"></i> Livros
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/emprestimos" class="nav-link active">
+                        <i class="fas fa-handshake"></i> Empréstimos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/devolucoes" class="nav-link">
+                        <i class="fas fa-undo"></i> Devoluções
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link user-logged" onclick="return false;">
+                        <i class="fas fa-user"></i> Usuário Teste <span class="user-status"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/usuarios/novo" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Cadastrar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="page-header">
+                <h1>Gerenciar Empréstimos</h1>
+                <p>Realize novos empréstimos e acompanhe os existentes</p>
+            </header>
+
+            <div class="loans-container">
+                <div class="loans-tabs">
+                    <button class="tab-button active" onclick="showLoanTab('new')">
+                        <i class="fas fa-plus"></i> Novo Empréstimo
+                    </button>
+                </div>
+
+                <div id="new-loan" class="tab-content active">
+                    <div class="form-container">
+                        <h2>Realizar Novo Empréstimo</h2>
+                        <form id="newLoanForm" class="loan-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="bookSearch">
+                                        <i class="fas fa-book"></i> Buscar Livro
+                                    </label>
+                                    <div class="search-input-group">
+                                        <input type="text" id="bookSearch" class="form-control" placeholder="Digite título, autor ou ISBN">
+                                        <button type="button" class="btn btn-secondary" onclick="searchBook()">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                    <div id="bookResults" class="search-results"></div>
+                                </div>
+                            </div>
+
+                            <div class="selected-items">
+                                <div class="selected-book" id="selectedBook" style="display: none;">
+                                    <h3>Livro Selecionado</h3>
+                                    <div class="book-card-loan">
+                                        <img id="selectedBookImage" src="" alt="Capa do Livro">
+                                        <div class="book-info">
+                                            <strong id="selectedBookTitle">-</strong>
+                                            <p id="selectedBookAuthor">-</p>
+                                            <small id="selectedBookISBN">-</small>
+                                        </div>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="clearSelectedBook()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="loan-details">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="loanDate">
+                                            <i class="fas fa-calendar"></i> Data do Empréstimo
+                                        </label>
+                                        <input type="date" id="loanDate" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="returnDate">
+                                            <i class="fas fa-calendar-check"></i> Data de Devolução Prevista
+                                        </label>
+                                        <input type="date" id="returnDate" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="loanNotes">
+                                        <i class="fas fa-sticky-note"></i> Observações (opcional)
+                                    </label>
+                                    <textarea id="loanNotes" class="form-control" rows="3" placeholder="Adicione observações sobre o empréstimo..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary" onclick="return false;">
+                                    <i class="fas fa-handshake"></i> Confirmar Empréstimo
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="return false;">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/loans.js"></script>
+</body>
+</html>
