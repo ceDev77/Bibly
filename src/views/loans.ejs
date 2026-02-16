@@ -3,150 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empréstimos - Bibly</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <title>Bibly - <%= user && user.role === 'admin' ? 'Gestão de Empréstimos' : 'Meus Empréstimos' %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link active">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link user-logged" onclick="return false;">
-                        <i class="fas fa-user"></i> Usuário Teste <span class="user-status"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/usuarios/novo" class="nav-link">
-                        <i class="fas fa-user-plus"></i> Cadastrar
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <%- include('partials/navbar') %>
 
-    <main class="main-content">
-        <div class="container">
-            <header class="page-header">
-                <h1>Gerenciar Empréstimos</h1>
-                <p>Realize novos empréstimos e acompanhe os existentes</p>
-            </header>
+    <main class="flex-grow py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <% if (typeof user !== 'undefined' && user) { %>
+                <header class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+                        <%= user.role === 'admin' ? 'Histórico Geral de Empréstimos' : 'Meus Empréstimos' %>
+                    </h1>
+                    <p class="text-lg text-gray-600">
+                        <%= user.role === 'admin' ? 'Gerencie e pesquise todos os registros de circulação de livros.' : 'Veja quais exemplares você já pegou emprestado.' %>
+                    </p>
+                </header>
 
-            <div class="loans-container">
-                <div class="loans-tabs">
-                    <button class="tab-button active" onclick="showLoanTab('new')">
-                        <i class="fas fa-plus"></i> Novo Empréstimo
-                    </button>
-                </div>
+                <% if (user.role === 'admin') { %>
+                    <div class="mb-8 max-w-2xl mx-auto">
+                        <div class="relative group">
+                            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                            <input type="text" id="userSearch" placeholder="Pesquisar por nome do usuário..." 
+                                class="w-full pl-12 pr-6 py-4 bg-white rounded-2xl shadow-sm border border-gray-100 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-gray-700">
+                        </div>
+                    </div>
+                <% } %>
 
-                <div id="new-loan" class="tab-content active">
-                    <div class="form-container">
-                        <h2>Realizar Novo Empréstimo</h2>
-                        <form id="newLoanForm" class="loan-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="bookSearch">
-                                        <i class="fas fa-book"></i> Buscar Livro
-                                    </label>
-                                    <div class="search-input-group">
-                                        <input type="text" id="bookSearch" class="form-control" placeholder="Digite título, autor ou ISBN">
-                                        <button type="button" class="btn btn-secondary" onclick="searchBook()">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                    <div id="bookResults" class="search-results"></div>
-                                </div>
-                            </div>
-
-                            <div class="selected-items">
-                                <div class="selected-book" id="selectedBook" style="display: none;">
-                                    <h3>Livro Selecionado</h3>
-                                    <div class="book-card-loan">
-                                        <img id="selectedBookImage" src="" alt="Capa do Livro">
-                                        <div class="book-info">
-                                            <strong id="selectedBookTitle">-</strong>
-                                            <p id="selectedBookAuthor">-</p>
-                                            <small id="selectedBookISBN">-</small>
-                                        </div>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="clearSelectedBook()">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="loan-details">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="loanDate">
-                                            <i class="fas fa-calendar"></i> Data do Empréstimo
-                                        </label>
-                                        <input type="date" id="loanDate" class="form-control" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="returnDate">
-                                            <i class="fas fa-calendar-check"></i> Data de Devolução Prevista
-                                        </label>
-                                        <input type="date" id="returnDate" class="form-control" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="loanNotes">
-                                        <i class="fas fa-sticky-note"></i> Observações (opcional)
-                                    </label>
-                                    <textarea id="loanNotes" class="form-control" rows="3" placeholder="Adicione observações sobre o empréstimo..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn btn-primary" onclick="return false;">
-                                    <i class="fas fa-handshake"></i> Confirmar Empréstimo
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="return false;">
-                                    <i class="fas fa-times"></i> Cancelar
-                                </button>
-                            </div>
-                        </form>
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="loansTable">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-100">
+                                    <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-gray-400">ID</th>
+                                    <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-gray-400">Usuário</th>
+                                    <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-gray-400">Livro</th>
+                                    <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-gray-400">Data de Empréstimo</th>
+                                    <th class="px-6 py-4 text-xs font-black uppercase tracking-widest text-gray-400">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <% if (typeof loans !== 'undefined' && loans.length > 0) { %>
+                                    <% loans.forEach(loan => { %>
+                                        <tr class="hover:bg-indigo-50/30 transition-all loan-row">
+                                            <td class="px-6 py-4 font-bold text-gray-400">#<%= loan.id %></td>
+                                            <td class="px-6 py-4 font-bold text-gray-900 user-name-cell"><%= loan.user_name %></td>
+                                            <td class="px-6 py-4 font-medium text-indigo-600"><%= loan.book_title %></td>
+                                            <td class="px-6 py-4 text-gray-500 font-semibold"><%= loan.loan_date %></td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-3 py-1 <%= loan.status === 'ativo' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' %> rounded-full text-xs font-black uppercase tracking-widest">
+                                                    <%= loan.status === 'ativo' ? 'Em Aberto' : 'Devolvido' %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-20 text-center">
+                                            <i class="fas fa-handshake-slash text-gray-200 text-6xl mb-4 block"></i>
+                                            <p class="text-gray-500 font-bold italic">Nenhum registro encontrado.</p>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-            </div>
+            <% } else { %>
+                <div class="max-w-md mx-auto mt-20 text-center bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+                    <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-gray-900 mb-4 italic">Acesso Restrito</h2>
+                    <p class="text-gray-500 mb-8 font-medium italic">Não é possível visualizar o histórico sem estar logado.</p>
+                    <a href="/usuarios/novo" class="block w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black rounded-2xl shadow-lg hover:shadow-indigo-200 hover:-translate-y-1 transition-all active:scale-95">
+                        CRIAR MINHA CONTA
+                    </a>
+                </div>
+            <% } %>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>
 
-    <script src="/js/main.js"></script>
-    <script src="/js/loans.js"></script>
+    <script>
+        const searchInput = document.getElementById('userSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                const rows = document.querySelectorAll('.loan-row');
+                
+                rows.forEach(row => {
+                    const userName = row.querySelector('.user-name-cell').textContent.toLowerCase();
+                    row.style.display = userName.includes(term) ? '' : 'none';
+                });
+            });
+        }
+    </script>
 </body>
 </html>

@@ -5,103 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bibly - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/styles/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link <%= activePage === 'books' ? 'active' : '' %>">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link <%= activePage === 'loans' ? 'active' : '' %>">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link <%= activePage === 'returns' ? 'active' : '' %>">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link user-logged" onclick="return false;">
-                        <i class="fas fa-user"></i> <%= user.name %> <span class="user-status"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/usuarios/novo" class="nav-link">
-                        <i class="fas fa-user-plus"></i> Cadastrar
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <%- include('partials/navbar') %>
 
-    <main class="main-content">
-        <div class="container">
-            <header class="page-header">
-                <h1>Dashboard</h1>
-                <p>Bem-vindo ao Bibly, <%= user.name %></p>
+    <main class="flex-grow py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <header class="mb-12 text-center">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2 italic">Bem-vindo à Bibly</h1>
+                <p class="text-lg text-gray-600 italic font-medium">Sua plataforma inteligente de gestão de biblioteca.</p>
             </header>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center text-2xl shadow-inner">
                         <i class="fas fa-book"></i>
                     </div>
-                    <div class="stat-info">
-                        <h3><%= stats.totalBooks %></h3>
-                        <p>Livros Disponíveis</p>
+                    <div>
+                        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Total Livros</p>
+                        <p class="text-2xl font-black text-gray-900"><%= stats.totalBooks %></p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-green-50 text-green-500 rounded-xl flex items-center justify-center text-2xl shadow-inner">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <div class="stat-info">
-                        <h3><%= stats.activeLoans %></h3>
-                        <p>Empréstimos Ativos</p>
+                    <div>
+                        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Empréstimos</p>
+                        <p class="text-2xl font-black text-gray-900"><%= stats.activeLoans %></p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Leitores</p>
+                        <p class="text-2xl font-black text-gray-900"><%= stats.totalUsers %></p>
                     </div>
                 </div>
             </div>
 
-            <div class="dashboard-sections">
-                <section class="recent-books">
-                    <h2>Livros Recém Adicionados</h2>
-                    <div class="books-grid">
-                        <% if (recentBooks.length > 0) { %>
-                            <% recentBooks.forEach(book => { %>
-                                <div class="book-card">
-                                    <img src="<%= book.image_url || '/images/default-book.jpg' %>" alt="<%= book.title %>">
-                                    <h3><%= book.title %></h3>
-                                    <p><%= book.author %></p>
-                                    <a href="/livros/<%= book.id %>" class="btn btn-primary">Ver Detalhes</a>
+            <section>
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 italic">Adicionados Recentemente</h2>
+                    <a href="/livros" class="text-indigo-600 font-bold hover:underline flex items-center gap-2">
+                        Ver acervo completo <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <% if (typeof recentBooks !== 'undefined' && recentBooks.length > 0) { %>
+                        <% recentBooks.forEach(book => { %>
+                            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
+                                <div class="aspect-[4/5] relative overflow-hidden bg-gray-100">
+                                    <% if (book.image_url) { %>
+                                        <img src="<%= book.image_url %>" alt="<%= book.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <% } else { %>
+                                        <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                            <i class="fas fa-book text-5xl"></i>
+                                        </div>
+                                    <% } %>
                                 </div>
-                            <% }); %>
-                        <% } else { %>
-                            <p>Nenhum livro cadastrado no momento.</p>
-                        <% } %>
-                    </div>
-                </section>
-            </div>
+                                <div class="p-4">
+                                    <h3 class="text-gray-900 font-bold text-base mb-1 truncate text-center"><%= book.title %></h3>
+                                    <p class="text-gray-500 text-sm mb-4 truncate text-center"><%= book.author %></p>
+                                    <a href="/livros/<%= book.id %>" class="block w-full text-center py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-sm font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md">
+                                        Ver Detalhes
+                                    </a>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
+                            <i class="fas fa-book-open text-gray-300 text-4xl mb-4"></i>
+                            <p class="text-gray-500 italic">Nenhum livro cadastrado no momento.</p>
+                        </div>
+                    <% } %>
+                </div>
+            </section>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
             <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>

@@ -3,177 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devoluções - Bibly</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <title>Bibly - Devoluções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link active">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link user-logged" onclick="return false;">
-                        <i class="fas fa-user"></i> Usuário Teste <span class="user-status"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/usuarios/novo" class="nav-link">
-                        <i class="fas fa-user-plus"></i> Cadastrar
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <%- include('partials/navbar') %>
 
-    <main class="main-content">
-        <div class="container">
-            <header class="page-header">
-                <h1>Gerenciar Devoluções</h1>
-                <p>Processe devoluções e acompanhe livros pendentes</p>
+    <main class="flex-grow py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <header class="flex flex-col items-center text-center mb-10 gap-6">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Histórico de Devoluções</h1>
+                    <p class="text-lg text-gray-600">Controle veja os registros das suas devoluções de livros.</p>
+                </div>
             </header>
 
-            <div class="returns-container">
-                <div class="returns-tabs">
-                    <button class="tab-button active" onclick="showReturnTab('borrowed')">
-                        <i class="fas fa-book-open"></i> Meus Livros Emprestados
-                    </button>
-                    <button class="tab-button" onclick="showReturnTab('history')">
-                        <i class="fas fa-history"></i> Histórico de Devoluções
-                    </button>
-                </div>
-
-                <div id="borrowed-books" class="tab-content active">
-                    <div class="borrowed-section">
-                        <div class="section-header">
-                            <h2>Meus Livros Emprestados</h2>
-                            <p>Livros que você tem emprestados atualmente</p>
-                        </div>
-
-                        <div class="borrowed-books-grid">
-                            <div class="borrowed-book-card">
-                                <div class="book-image">
-                                    <img src="https://via.placeholder.com/120x160/4a90e2/ffffff?text=Livro+1" alt="Dom Casmurro">
-                                </div>
-                                <div class="book-details">
-                                    <h3>Dom Casmurro</h3>
-                                    <p class="book-author">Machado de Assis</p>
-                                    <div class="loan-info">
-                                        <div class="info-item">
-                                            <i class="fas fa-calendar"></i>
-                                            <span>Emprestado em: <strong>01/11/2025</strong></span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-calendar-check"></i>
-                                            <span>Devolver até: <strong>21/11/2025</strong></span>
-                                        </div>
-                                        <div class="info-item">
-                                            <i class="fas fa-clock"></i>
-                                            <span>Tempo restante: <strong class="time-remaining">0 dias</strong></span>
-                                        </div>
-                                        <div class="info-item fine">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                            <span>Multa: <strong class="fine-amount">R$ 0,50</strong></span>
-                                        </div>
-                                    </div>
-                                    <div class="book-actions">
-                                        <button class="btn btn-success btn-sm" onclick="returnBook(1)">
-                                            <i class="fas fa-undo"></i> Devolver
-                                        </button>
-                                        <button class="btn btn-secondary btn-sm" onclick="renewBook(1)">
-                                            <i class="fas fa-refresh"></i> Renovar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div id="return-history" class="tab-content">
-                    <div class="history-section">
-                        <div class="section-header">
-                            <h2>Histórico de Devoluções</h2>
-                            <p>Livros que você já devolveu</p>
-                        </div>
-
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Livro</th>
-                                        <th>Data Empréstimo</th>
-                                        <th>Data Devolução</th>
-                                        <th>Dias de Atraso</th>
-                                        <th>Multa Paga</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="book-cell">
-                                                <strong>Dom Casmurro</strong>
-                                                <small>Machado de Assis</small>
-                                            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-100 text-gray-400 text-xs font-black uppercase tracking-widest">
+                                <th class="px-6 py-5">Livro</th>
+                                <th class="px-6 py-5">Leitor</th>
+                                <th class="px-6 py-5">Empréstimo</th>
+                                <th class="px-6 py-5">Devolução</th>
+                                <th class="px-6 py-5">Multa</th>
+                                <th class="px-6 py-5 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <% if (typeof returns !== 'undefined' && returns.length > 0) { %>
+                                <% returns.forEach(returnItem => { %>
+                                    <tr class="hover:bg-gray-50/50 transition-colors group">
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors"><%= returnItem.bookTitle %></div>
                                         </td>
-                                        <td>15/10/2025</td>
-                                        <td>29/10/2025</td>
-                                        <td><span class="no-delay">0</span></td>
-                                        <td><span class="no-fine">R$ 0,00</span></td>
-                                        <td><span class="status-badge returned">Devolvido no Prazo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="book-cell">
-                                                <strong>Dom Casmurro</strong>
-                                                <small>Machado de Assis</small>
-                                            </div>
+                                        <td class="px-6 py-4 text-gray-600 font-medium"><%= returnItem.userName %></td>
+                                        <td class="px-6 py-4 text-gray-500 text-sm italic"><%= returnItem.loanDate %></td>
+                                        <td class="px-6 py-4 text-gray-900 font-semibold"><%= returnItem.returnDate %></td>
+                                        <td class="px-6 py-4 font-black <%= returnItem.penalty > 0 ? 'text-red-500' : 'text-green-500' %>">
+                                            <%= returnItem.penalty > 0 ? 'R$ ' + returnItem.penalty : '-' %>
                                         </td>
-                                        <td>01/09/2025</td>
-                                        <td>18/09/2025</td>
-                                        <td><span class="delay">3 dias</span></td>
-                                        <td><span class="fine-paid">R$ 1,50</span></td>
-                                        <td><span class="status-badge late-return">Devolvido com Atraso</span></td>
+                                        <td class="px-6 py-4 text-right">
+                                            <% 
+                                                let badgeClass = returnItem.status === 'Dentro do prazo' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600';
+                                            %>
+                                            <span class="px-3 py-1 rounded-full text-xs font-bold <%= badgeClass %>">
+                                                <%= returnItem.statusDisplay %>
+                                            </span>
+                                        </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="px-6 py-20 text-center">
+                                        <div class="flex flex-col items-center">
+                                            <i class="fas fa-history text-gray-200 text-5xl mb-4"></i>
+                                            <p class="text-gray-400 italic font-medium text-lg">Nenhum registo de devolução encontrado.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
                 </div>
-
-
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>
 

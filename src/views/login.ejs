@@ -3,108 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Bibly</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <title>Bibly - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <nav class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 shadow-lg sticky top-0 z-50 h-[70px]">
+        <div class="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+            <div class="flex items-center text-white text-2xl font-bold">
+                <i class="fas fa-book mr-3 text-3xl"></i>
                 <span>Bibly</span>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="login.html" class="nav-link active">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </a>
-                </li>
-            </ul>
+            
+            <div class="flex items-center gap-3">
+                <a href="/usuarios/novo" class="px-5 py-2 bg-white text-indigo-600 font-bold rounded-full shadow-md hover:bg-gray-100 transition-all">
+                    Criar Conta
+                </a>
+            </div>
         </div>
     </nav>
 
-    <main class="main-content">
-        <div class="container">
-            <header class="page-header">
-                <h1>Login</h1>
-                <p>Acesse sua conta no Bibly</p>
-            </header>
-
-            <div class="form-container">
-                <div class="login-header">
-                    <i class="fas fa-user-circle login-icon"></i>
+    <main class="flex-grow flex items-center justify-center py-12 px-4">
+        <div class="max-w-md w-full">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 text-indigo-600 rounded-3xl mb-4 shadow-inner">
+                    <i class="fas fa-lock text-3xl"></i>
                 </div>
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Bem-vindo de volta</h1>
+                <p class="text-gray-600 italic font-medium">Acesse sua conta para gerenciar seus livros.</p>
+            </div>
 
-                <form id="loginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="loginEmail">
-                            <i class="fas fa-envelope"></i> E-mail
+            <div class="bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+                <form action="/login" method="POST" class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
+                            <i class="fas fa-envelope text-indigo-500 mr-2"></i> E-mail
                         </label>
-                        <input type="email" id="loginEmail" name="email" class="form-control" placeholder="seu@email.com" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="loginPassword">
-                            <i class="fas fa-lock"></i> Senha
-                        </label>
-                        <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Sua senha" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="rememberMe" name="rememberMe">
-                            <span class="checkmark"></span>
-                            Lembrar de mim
-                        </label>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-full">
-                            <i class="fas fa-sign-in-alt"></i> Entrar
-                        </button>
-                        
-                        <div class="login-links">
-                            <a href="#" class="forgot-password">Esqueceu sua senha?</a>
-                        </div>
-                        
-                        <div class="register-prompt">
-                            <p>Não possui uma conta? <a href="/usuarios/novo" class="register-link">Cadastre-se aqui</a></p>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" id="email" name="email" 
+                                   class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder-gray-400" 
+                                   placeholder="seu@email.com" required>
                         </div>
                     </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label for="password" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
+                                <i class="fas fa-key text-indigo-500 mr-2"></i> Senha
+                            </label>
+                            <a href="#" class="text-xs font-bold text-indigo-600 hover:underline">Esqueceu a senha?</a>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" id="password" name="password" 
+                                   class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
+                                   placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer">
+                        <label for="remember" class="ml-2 text-sm text-gray-600 cursor-pointer select-none">Lembrar de mim</label>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:-translate-y-1">
+                        Entrar na Conta
+                    </button>
                 </form>
 
+                <div class="mt-8 pt-8 border-t border-gray-100 text-center text-sm">
+                    <p class="text-gray-500">
+                        Não tem uma conta? 
+                        <a href="/usuarios/novo" class="text-indigo-600 font-bold hover:underline">Cadastre-se agora</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <a href="/" class="text-gray-400 hover:text-indigo-500 transition-colors text-sm font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i> Voltar para o início
+                </a>
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="/js/main.js"></script>
-    <script src="/js/login.js"></script>
 </body>
 </html>

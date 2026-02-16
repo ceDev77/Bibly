@@ -3,140 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Livro - Bibly</title>
-    <link rel="stylesheet" href="/styles/main.css">
+    <title>Bibly - <%= book.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link user-logged" onclick="return false;">
-                        <i class="fas fa-user"></i> Usuário Teste <span class="user-status"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/usuarios/novo" class="nav-link">
-                        <i class="fas fa-user-plus"></i> Cadastrar
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <%- include('partials/navbar') %>
 
-    <main class="main-content">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="/">Dashboard</a> > 
-                <a href="/livros">Livros</a> > 
-                <span>Detalhes do Livro</span>
+    <main class="flex-grow py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="mb-8">
+                <a href="/livros" class="text-indigo-600 font-bold hover:underline flex items-center gap-2">
+                    <i class="fas fa-arrow-left text-xs"></i> Voltar ao acervo
+                </a>
             </div>
 
-            <div class="book-details-container">
-                <div class="book-details-grid">
-                    <div class="book-image-section">
-                        <img id="bookImage" src="/images/Dom-Casmurro-Capa-do-Livro-1-machado_de_assis-2900279676.jpg" alt="Dom Casmurro" class="book-cover-large">
-                        <div class="book-actions">
-                            <button class="btn btn-primary btn-full" onclick="requestLoan()">
-                                <i class="fas fa-handshake"></i> Solicitar Empréstimo
-                            </button>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                <div class="flex flex-col lg:flex-row">
+                    <div class="lg:w-1/3 bg-gray-50 p-8 flex items-center justify-center border-b lg:border-b-0 lg:border-r border-gray-100">
+                        <div class="relative group w-full max-w-[300px] aspect-[3/4] rounded-2xl shadow-2xl overflow-hidden bg-white">
+                            <% if (book.image_url) { %>
+                                <img src="<%= book.image_url %>" alt="<%= book.title %>" class="w-full h-full object-cover">
+                            <% } else { %>
+                                <div class="w-full h-full flex items-center justify-center text-gray-200">
+                                    <i class="fas fa-book text-8xl"></i>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
 
-                    <div class="book-info-section">
-                        <div class="book-header">
-                            <h1 id="bookTitle">Carregando título...</h1>
-                            <p class="book-author" id="bookAuthor">Carregando autor...</p>
+                    <div class="lg:w-2/3 p-8 lg:p-12">
+                        <div class="flex flex-wrap items-center gap-3 mb-6">
+                            <span class="px-4 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-black uppercase tracking-widest">
+                                <%= book.category %>
+                            </span>
+                            <% if (book.stock > 0) { %>
+                                <span class="px-4 py-1 bg-green-100 text-green-700 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> Disponível
+                                </span>
+                            <% } else { %>
+                                <span class="px-4 py-1 bg-red-100 text-red-700 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                                    <div class="w-2 h-2 bg-red-500 rounded-full"></div> Indisponível
+                                </span>
+                            <% } %>
                         </div>
 
-                        <div class="book-meta">
-                            <div class="meta-item">
-                                <strong>ISBN:</strong>
-                                <span id="bookISBN">-</span>
-                            </div>
-                            <div class="meta-item">
-                                <strong>Categoria:</strong>
-                                <span id="bookCategory" class="category-tag">-</span>
-                            </div>
-                            <div class="meta-item">
-                                <strong>Ano de Publicação:</strong>
-                                <span id="bookYear">-</span>
-                            </div>
-                            <div class="meta-item">
-                                <strong>Editora:</strong>
-                                <span id="bookPublisher">-</span>
-                            </div>
-                            <div class="meta-item">
-                                <strong>Páginas:</strong>
-                                <span id="bookPages">-</span>
-                            </div>
-                            <div class="meta-item">
-                                <strong>Status:</strong>
-                                <span id="bookStatus" class="status-badge">-</span>
-                            </div>
-                        </div>
+                        <h1 class="text-4xl lg:text-5xl font-black text-gray-900 mb-4 italic leading-tight">
+                            <%= book.title %>
+                        </h1>
+                        <p class="text-xl text-gray-500 mb-8 font-medium italic">
+                            por <span class="text-gray-900 font-bold not-italic"><%= book.author %></span>
+                        </p>
 
-                        <div class="book-description">
-                            <h3>Sinopse</h3>
-                            <p id="bookDescription">Carregando descrição...</p>
-                        </div>
-
-                        <div class="book-availability">
-                            <h3>Disponibilidade</h3>
-                            <div class="availability-info">
-                                <div class="availability-item">
-                                    <i class="fas fa-book"></i>
-                                    <span>Exemplares Totais: <strong id="totalCopies">-</strong></span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
+                                    <i class="fas fa-fingerprint text-xl"></i>
                                 </div>
-                                <div class="availability-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Disponíveis: <strong id="availableCopies">-</strong></span>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">ISBN</p>
+                                    <p class="text-lg font-black text-gray-900"><%= book.isbn %></p>
                                 </div>
-                                <div class="availability-item">
-                                    <i class="fas fa-handshake"></i>
-                                    <span>Emprestados: <strong id="loanedCopies">-</strong></span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
+                                    <i class="fas fa-calendar-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Ano de Lançamento</p>
+                                    <p class="text-lg font-black text-gray-900"><%= book.year %></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            <% if (book.stock > 0) { %>
+                                <form action="/emprestimos/solicitar/<%= book.id %>" method="POST">
+                                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black rounded-2xl shadow-lg hover:shadow-indigo-200 hover:-translate-y-1 transition-all active:scale-95 flex items-center gap-3">
+                                        <i class="fas fa-hand-holding-heart text-xl"></i> SOLICITAR EMPRÉSTIMO
+                                    </button>
+                                </form>
+                            <% } %>
+                        </div>
+
+                        <div class="bg-indigo-50/50 rounded-2xl p-8 border border-indigo-100/50 mt-12">
+                            <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-6">Estado do Acervo</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                                <div>
+                                    <span class="block text-sm text-indigo-600 font-medium mb-1">Status</span>
+                                    <span class="text-2xl font-black <%= book.stock > 0 ? 'text-green-600' : 'text-red-600' %>">
+                                        <%= book.stock > 0 ? 'Disponível' : 'Esgotado' %>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="block text-sm text-indigo-600 font-medium mb-1">Unidades em Estoque</span>
+                                    <span class="text-2xl font-black text-indigo-900"><%= book.stock %></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="/js/main.js"></script>
-    <script src="/js/book-details.js"></script>
 </body>
 </html>

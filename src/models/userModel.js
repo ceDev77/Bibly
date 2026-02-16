@@ -13,6 +13,27 @@ async function createUser({ name, email, password, role }) {
   return created;
 }
 
+async function findByEmail(email) {
+  const db = await getDb();
+  
+  const user = await db.get(
+    'SELECT id, name, email, password, role FROM users WHERE email = ?',
+    [email]
+  );
+  
+  return user;
+}
+
+async function findAllUsers() {
+  const db = await getDb();
+  
+  const users = await db.all('SELECT * FROM users ORDER BY name');
+  
+  return users;
+}
+
 module.exports = {
   createUser,
+  findByEmail,
+  findAllUsers
 };

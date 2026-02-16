@@ -3,134 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livros - Bibly</title>
+    <title>Bibly - Acervo de Livros</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/styles/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-book"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="/" class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros" class="nav-link <%= activePage === 'books' ? 'active' : '' %>">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/emprestimos" class="nav-link <%= activePage === 'loans' ? 'active' : '' %>">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/devolucoes" class="nav-link <%= activePage === 'returns' ? 'active' : '' %>">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link user-logged" onclick="return false;">
-                        <i class="fas fa-user"></i> <%= user.name %> <span class="user-status"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/livros/novo" class="nav-link">
-                        <i class="fas fa-plus"></i> Novo Livro
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<body class="bg-gray-50 min-h-screen flex flex-col m-0 p-0">
+    <%- include('partials/navbar') %>
 
-    <main class="main-content">
-        <div class="container">
-            <header class="page-header">
-                <h1>Catálogo de Livros</h1>
-                <p>Explore nossa coleção de livros disponíveis</p>
+    <main class="flex-grow py-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <header class="flex flex-col items-center text-center mb-12 gap-6">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Acervo de Livros</h1>
+                    <p class="text-lg text-gray-600">Explore nossa coleção e gêneros.</p>
+                </div>
+                <div class="flex gap-3 w-full justify-center">
+                    <div class="relative w-full md:w-80">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" placeholder="Pesquisar título ou autor..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all">
+                    </div>
+                    <a href="/livros/novo" class="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-all shadow-md flex items-center justify-center min-w-[50px]">
+                        <i class="fas fa-plus text-xl"></i>
+                    </a>
+                </div>
             </header>
 
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, autor ou categoria...">
-                    <button class="search-btn" onclick="searchBooks()">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
-            </div>
-
-            <div class="filters-container">
-                <div class="filters">
-                    <select id="categoryFilter" class="filter-select">
-                        <option value="">Todas as Categorias</option>
-                        <option value="literatura">Literatura</option>
-                        <option value="ficcao">Ficção</option>
-                        <option value="romance">Romance</option>
-                        <option value="historia">História</option>
-                        <option value="ciencia">Ciência</option>
-                        <option value="tecnologia">Tecnologia</option>
-                        <option value="biografia">Biografia</option>
-                    </select>
-                    
-                    <select id="statusFilter" class="filter-select">
-                        <option value="">Todos os Status</option>
-                        <option value="disponivel">Disponível</option>
-                        <option value="emprestado">Emprestado</option>
-                        <option value="reservado">Reservado</option>
-                    </select>
-                    
-                    <select id="sortBy" class="filter-select">
-                        <option value="title">Ordenar por Título</option>
-                        <option value="author">Ordenar por Autor</option>
-                        <option value="year">Ordenar por Ano</option>
-                        <option value="category">Ordenar por Categoria</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="books-container">
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="booksGrid">
-                    <% if (books && books.length > 0) { %>
-                        <% books.forEach(book => { %>
-                            <a href="/livros/<%= book.id %>" class="bg-white rounded-lg shadow-sm ring-1 ring-gray-200 overflow-hidden hover:shadow-md hover:ring-gray-300 transition">
-                                <img class="w-full aspect-[3/4] object-cover" src="<%= book.image_url || '/images/default-book.jpg' %>" alt="<%= book.title %>">
-                                <div class="p-3">
-                                    <h3 class="text-sm font-semibold text-gray-900"><%= book.title %></h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+                <% if (typeof books !== 'undefined' && books.length > 0) { %>
+                    <% books.forEach(book => { %>
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group">
+                            <div class="aspect-[2/3] relative overflow-hidden bg-gray-200">
+                                <% if (book.image_url) { %>
+                                    <img src="<%= book.image_url %>" alt="<%= book.title %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <% } else { %>
+                                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4 text-center">
+                                        <i class="fas fa-book text-4xl mb-2"></i>
+                                        <span class="text-xs font-bold uppercase tracking-widest">Sem Capa</span>
+                                    </div>
+                                <% } %>
+                                <div class="absolute inset-0 bg-gradient-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                    <a href="/livros/<%= book.id %>" class="w-full py-2 bg-white text-indigo-600 rounded-lg text-sm font-bold text-center hover:bg-gray-100 transition-colors">
+                                        Ver Detalhes
+                                    </a>
                                 </div>
-                            </a>
-                        <% }); %>
-                    <% } else { %>
-                        <p class="text-gray-600">Nenhum livro cadastrado no momento.</p>
-                    <% } %>
-                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="text-gray-900 font-bold text-base mb-1 truncate"><%= book.title %></h3>
+                                <p class="text-gray-500 text-sm mb-4 truncate"><%= book.author %></p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-gray-100 text-gray-500 rounded-md">
+                                        <%= book.category || 'Geral' %>
+                                    </span>
+                                    <% if (book.available) { %>
+                                        <span class="text-green-500 text-xs font-bold flex items-center gap-1">
+                                            <i class="fas fa-check-circle"></i> Disponível
+                                        </span>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-gray-200">
+                        <i class="fas fa-search text-gray-300 text-5xl mb-4"></i>
+                        <p class="text-gray-500 text-xl italic">Nenhum livro encontrado no acervo.</p>
+                    </div>
+                <% } %>
             </div>
 
-            <div class="pagination">
-                <button class="btn btn-secondary" id="prevPage" onclick="changePage(-1)">
-                    <i class="fas fa-chevron-left"></i> Anterior
+            <div class="mt-16 flex items-center justify-center gap-2">
+                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
-                <span class="page-info" id="pageInfo">Página 1 de 5</span>
-                <button class="btn btn-secondary" id="nextPage" onclick="changePage(1)">
-                    Próxima <i class="fas fa-chevron-right"></i>
+                <button class="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white font-bold rounded-lg shadow-md transition-all">1</button>
+                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">2</button>
+                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">3</button>
+                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Bibly. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto w-full border-none m-0 p-0">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="/js/main.js"></script>
-    <script src="/js/books.js"></script>
 </body>
 </html>

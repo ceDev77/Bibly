@@ -23,15 +23,10 @@ async function index(req, res) {
     res.render('index', {
       title: 'Bibly - Sistema de Biblioteca',
       activePage: 'dashboard',
-      user: {
-        id: 1,
-        name: 'Usuário Teste',
-        email: 'usuario@teste.com',
-        role: 'admin',
-      },
+      user: req.session.user || { name: 'Visitante', role: 'guest' },
       stats: {
-        totalBooks: totalBooksRow?.count || 0,
-        activeLoans: activeLoans,
+        totalBooks: totalBooksRow?.count ?? 0,
+        activeLoans: activeLoans
       },
       recentBooks,
     });
