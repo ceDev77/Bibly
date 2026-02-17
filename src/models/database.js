@@ -44,17 +44,19 @@ async function init() {
     }
 
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS loans (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        book_id INTEGER NOT NULL,
-        loan_date TEXT NOT NULL,
-        return_date TEXT,
-        status TEXT NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
-      );
-    `);
+    CREATE TABLE IF NOT EXISTS loans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    book_id INTEGER NOT NULL,
+    loan_date TEXT NOT NULL,
+    return_date TEXT,
+    weeks INTEGER NOT NULL DEFAULT 1,
+    total_price REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+    );
+  `);
   }
 
   return dbPromise;

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <%- include('partials/navbar') %>
+
+    <main class="flex-grow py-10">
+        <div class="max-w-4xl mx-auto px-4">
+            <header class="mb-10 text-center">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2 italic">Meus Dados</h1>
+                <p class="text-gray-500 font-medium italic">Mantenha seus dados atualizados para uma melhor experiência.</p>
+            </header>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 flex items-center gap-3 rounded-r-xl shadow-sm">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="font-bold text-sm"><%= error %></span>
+                </div>
+            <% } %>
+
+            <% if (typeof success !== 'undefined' && success) { %>
+                <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 flex items-center gap-3 rounded-r-xl shadow-sm">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="font-bold text-sm text-green-700"><%= success %></span>
+                </div>
+            <% } %>
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-8 md:p-12">
+                <form action="/perfil/editar" method="POST" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">Nome Completo</label>
+                            <input type="text" name="name" value="<%= userInfo.name %>" class="w-full bg-gray-50 border border-dashed border-indigo-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">E-mail (Não alterável)</label>
+                            <input type="email" value="<%= userInfo.email %>" disabled class="w-full bg-gray-100 border border-gray-200 p-4 rounded-xl text-gray-400 font-bold cursor-not-allowed">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">CPF (Não alterável)</label>
+                            <input type="text" value="<%= userInfo.cpf %>" disabled class="w-full bg-gray-100 border border-gray-200 p-4 rounded-xl text-gray-400 font-bold cursor-not-allowed">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">Telefone</label>
+                            <input type="text" name="phone" value="<%= userInfo.phone %>" class="w-full bg-gray-50 border border-dashed border-indigo-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">Data de Nascimento</label>
+                            <input type="date" name="birthDate" value="<%= userInfo.birthDate %>" class="w-full bg-gray-50 border border-dashed border-indigo-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-black text-indigo-400 uppercase tracking-widest mb-2 italic">Endereço Residencial</label>
+                            <input type="text" name="address" value="<%= userInfo.address %>" class="w-full bg-gray-50 border border-dashed border-indigo-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t border-dashed border-gray-100">
+                        <h3 class="text-sm font-black text-indigo-400 uppercase tracking-widest mb-6 flex items-center gap-2 italic">
+                            <i class="fas fa-lock text-xs"></i> Alterar Senha
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 italic">Nova Senha</label>
+                                <input type="password" name="password" placeholder="Mantenha em branco para não alterar" class="w-full bg-gray-50 border border-dashed border-gray-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all placeholder:font-medium placeholder:italic">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2 italic">Confirmar Nova Senha</label>
+                                <input type="password" name="confirmPassword" placeholder="Repita a nova senha" class="w-full bg-gray-50 border border-dashed border-gray-200 p-4 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-900 transition-all placeholder:font-medium placeholder:italic">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right text-white font-black rounded-2xl shadow-xl shadow-indigo-100 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-3 tracking-[0.2em] uppercase italic">
+                        <i class="fas fa-save text-xl"></i> Atualizar Meus Dados
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

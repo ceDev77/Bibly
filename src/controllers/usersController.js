@@ -10,55 +10,63 @@ function renderNewForm(req, res) {
 
 async function create(req, res) {
   try {
-    const { fullName, email, phone, cpf, birthDate, address, password, confirmPassword, terms } = req.body;
+    const { fullName, email, phone, cpf, birthDate, address, password, confirmPassword } = req.body;
     
-    // Basic validation
+    const reloadWithError = (message) => {
+      return res.render('users-new', {
+        title: 'Novo Usuário - Bibly',
+        activePage: 'users-new',
+        user: req.session.user || { name: 'Visitante', role: 'guest' },
+        error: message,
+        formData: req.body 
+      });
+    };
+
     if (!fullName || !email || !phone || !cpf || !birthDate || !address || !password || !confirmPassword) {
-      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+      return reloadWithError('Todos os campos são obrigatórios');
     }
     
     if (password !== confirmPassword) {
-      return res.status(400).json({ error: 'As senhas não coincidem' });
-    }
-    
-    if (!terms) {
-      return res.status(400).json({ error: 'Você deve aceitar os termos de uso' });
+      return reloadWithError('As senhas não coincidem');
     }
     
     const db = await getDb();
     
-    // Check if email already exists
     const existingUser = await db.get('SELECT id FROM users WHERE email = ?', [email]);
     if (existingUser) {
-      return res.status(400).json({ error: 'E-mail já cadastrado' });
+      return reloadWithError('E-mail já cadastrado');
     }
     
-    // Check if CPF already exists
     const existingCPF = await db.get('SELECT id FROM users WHERE cpf = ?', [cpf]);
     if (existingCPF) {
-      return res.status(400).json({ error: 'CPF já cadastrado' });
+      return reloadWithError('CPF já cadastrado');
     }
     
-    // Insert new user
     await db.run(
-      `INSERT INTO users (fullName, email, phone, cpf, birthDate, address, password, role, createdAt, updatedAt) 
+      `INSERT INTO users (name, email, phone, cpf, birthDate, address, password, role, createdAt, updatedAt) 
        VALUES (?, ?, ?, ?, ?, ?, ?, 'user', datetime('now'), datetime('now'))`,
       [fullName, email, phone, cpf, birthDate, address, password]
     );
     
-    res.status(201).json({ success: 'Usuário criado com sucesso' });
+    res.render('login', { 
+        title: 'Login - Bibly',
+        success: 'Conta criada com sucesso! Faça login para continuar.' 
+    });
     
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
-    res.status(500).json({ error: 'Erro ao criar usuário' });
+    res.render('users-new', {
+      title: 'Novo Usuário - Bibly',
+      activePage: 'users-new',
+      error: 'Erro interno ao processar cadastro'
+    });
   }
 }
 
 async function adminUsers(req, res) {
   try {
     const db = await getDb();
-    const users = await db.all('SELECT id, fullName, email, phone, cpf, role, createdAt FROM users ORDER BY createdAt DESC');
-    
+    const users = await db.all('SELECT id, name, email, cpf, phone, role FROM users ORDER BY id DESC');
     res.render('admin/users', {
       title: 'Gerenciar Usuários - Bibly',
       activePage: 'admin-users',
@@ -71,8 +79,94 @@ async function adminUsers(req, res) {
   }
 }
 
+async function showDetail(req, res) {
+  try {
+    const { id } = req.params;
+    const db = await getDb();
+    const userDetail = await db.get('SELECT id, name, email, role, phone, cpf, birthDate, address FROM users WHERE id = ?', [id]);
+
+    if (!userDetail) {
+      return res.status(404).send("Usuário não encontrado.");
+    }
+
+    res.render('admin/user-details', {
+      title: `Perfil de ${userDetail.name} - Bibly`,
+      activePage: 'users',
+      user: req.session.user, 
+      targetUser: userDetail 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro ao buscar detalhes do usuário.");
+  }
+}
+
+async function showMyInfo(req, res) {
+  try {
+    const db = await getDb();
+    const userInfo = await db.get('SELECT id, name, email, role, phone, cpf, birthDate, address FROM users WHERE id = ?', [req.session.user.id]);
+    res.render('my-info', {
+      title: 'Minhas Informações - Bibly',
+      activePage: 'profile',
+      user: req.session.user,
+      userInfo: userInfo
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro ao carregar perfil.");
+  }
+}
+
+async function updateMyInfo(req, res) {
+  try {
+    const { name, phone, birthDate, address, password, confirmPassword } = req.body;
+    const db = await getDb();
+    const userId = req.session.user.id;
+
+    if (password) {
+      if (password !== confirmPassword) {
+        const userInfo = await db.get('SELECT id, name, email, role, phone, cpf, birthDate, address FROM users WHERE id = ?', [userId]);
+        return res.render('my-info', {
+          title: 'Minhas Informações - Bibly',
+          activePage: 'profile',
+          user: req.session.user,
+          userInfo: userInfo,
+          error: 'As senhas não coincidem!'
+        });
+      }
+
+      await db.run(
+        `UPDATE users SET name = ?, phone = ?, birthDate = ?, address = ?, password = ?, updatedAt = datetime('now') WHERE id = ?`,
+        [name, phone, birthDate, address, password, userId]
+      );
+    } else {
+      await db.run(
+        `UPDATE users SET name = ?, phone = ?, birthDate = ?, address = ?, updatedAt = datetime('now') WHERE id = ?`,
+        [name, phone, birthDate, address, userId]
+      );
+    }
+
+    const updatedUser = await db.get('SELECT id, name, email, role, phone, cpf, birthDate, address FROM users WHERE id = ?', [userId]);
+    req.session.user.name = updatedUser.name;
+
+    res.render('my-info', {
+      title: 'Minhas Informações - Bibly',
+      activePage: 'profile',
+      user: req.session.user,
+      userInfo: updatedUser,
+      success: 'Suas informações foram atualizadas com sucesso!'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro ao atualizar suas informações.");
+  }
+}
+
 module.exports = {
   renderNewForm,
   create,
-  adminUsers
+  adminUsers,
+  showDetail,
+  showMyInfo,
+  updateMyInfo
 };

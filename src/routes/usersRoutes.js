@@ -10,8 +10,18 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-router.get('/novo', usersController.renderNewForm);
-router.post('/', usersController.create);
-router.get('/admin/usuarios', requireAdmin, usersController.adminUsers);
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  next();
+}
+
+router.get('/usuarios/novo', usersController.renderNewForm);
+router.post('/usuarios', usersController.create);
+router.get('/usuarios', requireAdmin, usersController.adminUsers);
+router.get('/perfil', requireLogin, usersController.showMyInfo);
+router.post('/perfil/editar', requireLogin, usersController.updateMyInfo);
+router.get('/usuarios/:id', requireAdmin, usersController.showDetail);
 
 module.exports = router;

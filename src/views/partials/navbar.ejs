@@ -1,10 +1,11 @@
 <nav class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 shadow-lg sticky top-0 z-50 h-[70px]">
     <div class="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
-        <div class="flex items-center text-white text-2xl font-bold">
+        <a href="/" class="flex items-center text-white text-2xl font-bold min-w-[150px] hover:opacity-90 transition-opacity">
             <i class="fas fa-book mr-3 text-3xl"></i>
             <span>Bibly</span>
-        </div>
-        <ul class="hidden md:flex space-x-2 items-center h-full">
+        </a>
+
+        <ul class="hidden md:flex flex-1 justify-center space-x-2 items-center h-full">
             <li>
                 <a href="/" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
                     <i class="fas fa-home"></i> Dashboard
@@ -20,37 +21,44 @@
                     <i class="fas fa-handshake"></i> Empréstimos
                 </a>
             </li>
-            <li>
-                <a href="/devolucoes" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
-                    <i class="fas fa-undo"></i> Devoluções
-                </a>
-            </li>
 
             <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
                 <li>
-                    <a href="/usuarios" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500/20 text-orange-200 border border-orange-500/30 font-bold hover:bg-orange-500/40 transition-all">
+                    <a href="/usuarios" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
                         <i class="fas fa-users-cog"></i> Usuários
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/balanco" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
+                        <i class="fas fa-file-invoice-dollar"></i> Balanço
                     </a>
                 </li>
             <% } %>
         </ul>
 
-        <div class="flex items-center gap-3">
-            <% if (typeof user !== 'undefined' && user) { %>
-                <div class="flex items-center gap-3 px-4 py-1.5 bg-yellow-400 border-2 border-orange-500 rounded-full text-black font-semibold shadow-sm">
-                    <i class="fas fa-user-circle text-lg"></i>
-                    <span><%= user.name %></span>
-                </div>
+        <div class="flex items-center gap-3 min-w-[150px] justify-end">
+            <% if (typeof user !== 'undefined' && user && user.name !== 'Visitante') { %>
+                <% if (user.role === 'user') { %>
+                    <a href="/perfil" class="flex items-center gap-3 px-4 py-1.5 bg-white/10 border border-white/20 rounded-full text-white font-medium shadow-sm hover:bg-white/20 transition-all">
+                        <i class="fas fa-user-circle text-lg"></i>
+                        <span><%= user.name %></span>
+                    </a>
+                <% } else { %>
+                    <div class="flex items-center gap-3 px-4 py-1.5 bg-white/10 border border-white/20 rounded-full text-white font-medium shadow-sm">
+                        <i class="fas fa-user-circle text-lg"></i>
+                        <span><%= user.name %></span>
+                    </div>
+                <% } %>
                 <a href="/logout" class="px-4 py-2 text-white font-medium hover:text-gray-200 transition-all" title="Sair">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
             <% } else { %>
-                <a href="/login" class="px-4 py-2 text-white font-medium hover:text-gray-200 transition-all">
-                    Login
-                </a>
-                <a href="/usuarios/novo" class="px-5 py-2 bg-white text-indigo-600 font-bold rounded-full shadow-md hover:bg-gray-100 transition-all">
-                    Cadastrar
-                </a>
+                <div class="flex items-center gap-3 px-4 py-1.5 bg-white/10 border border-white/20 rounded-full text-white font-medium shadow-sm">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span>Visitante</span>
+                </div>
+                <a href="/login" class="px-4 py-2 text-white font-medium hover:text-gray-200 transition-all">Login</a>
+                <a href="/usuarios/novo" class="px-5 py-2 bg-white text-indigo-600 font-bold rounded-full shadow-md hover:bg-gray-100 transition-all">Cadastrar</a>
             <% } %>
         </div>
     </div>

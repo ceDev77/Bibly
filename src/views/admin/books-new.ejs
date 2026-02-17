@@ -9,51 +9,7 @@
     <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <nav class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 shadow-lg sticky top-0 z-50 h-[70px]">
-        <div class="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
-            <div class="flex items-center text-white text-2xl font-bold">
-                <i class="fas fa-book mr-3 text-3xl"></i>
-                <span>Bibly</span>
-            </div>
-            <ul class="hidden md:flex space-x-2 items-center h-full">
-                <li>
-                    <a href="/" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="/livros" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
-                        <i class="fas fa-book-open"></i> Livros
-                    </a>
-                </li>
-                <li>
-                    <a href="/emprestimos" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
-                        <i class="fas fa-handshake"></i> Empréstimos
-                    </a>
-                </li>
-                <li>
-                    <a href="/devolucoes" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition-all">
-                        <i class="fas fa-undo"></i> Devoluções
-                    </a>
-                </li>
-            </ul>
-            <div class="flex items-center gap-3">
-                <% if (user) { %>
-                    <div class="flex items-center gap-3 px-4 py-1.5 bg-yellow-400 border-2 border-orange-500 rounded-full text-black font-semibold shadow-sm">
-                        <i class="fas fa-user-circle text-lg"></i>
-                        <span><%= user.name %></span>
-                    </div>
-                <% } else { %>
-                    <a href="/login" class="px-4 py-2 text-white font-medium hover:text-gray-200 transition-all">
-                        Login
-                    </a>
-                    <a href="/usuarios/novo" class="px-5 py-2 bg-white text-indigo-600 font-bold rounded-full shadow-md hover:bg-gray-100 transition-all">
-                        Cadastrar
-                    </a>
-                <% } %>
-            </div>
-        </div>
-    </nav>
+    <%- include('../partials/navbar') %>
 
     <main class="flex-grow py-12 px-4">
         <div class="max-w-2xl mx-auto">
@@ -65,7 +21,7 @@
             <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
                 <form id="bookForm" action="/livros" method="POST" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
+                        <div class="space-y-2 md:col-span-2">
                             <label for="title" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
                                 <i class="fas fa-book text-indigo-500 mr-2"></i> Título
                             </label>
@@ -93,6 +49,13 @@
                             <input type="text" id="category" name="category" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Ex: Romance">
                         </div>
 
+                        <div class="space-y-2">
+                            <label for="stock" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
+                                <i class="fas fa-layer-group text-indigo-500 mr-2"></i> Estoque
+                            </label>
+                            <input type="number" id="stock" name="stock" min="1" step="1" value="1" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" required>
+                        </div>
+
                         <div class="space-y-2 md:col-span-2">
                             <label for="isbn" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
                                 <i class="fas fa-barcode text-indigo-500 mr-2"></i> ISBN
@@ -105,6 +68,13 @@
                                 <i class="fas fa-image text-indigo-500 mr-2"></i> URL da Imagem de Capa
                             </label>
                             <input type="url" id="image_url" name="image_url" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="https://exemplo.com/imagem.jpg">
+                        </div>
+
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="description" class="block text-sm font-bold text-gray-700 uppercase tracking-wider">
+                                <i class="fas fa-align-left text-indigo-500 mr-2"></i> Sinopse e Detalhes
+                            </label>
+                            <textarea id="description" name="description" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Breve resumo sobre a obra..."></textarea>
                         </div>
                     </div>
 
@@ -121,12 +91,6 @@
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <script src="/js/main.js"></script>
+    <%- include('../partials/footer') %>
 </body>
 </html>

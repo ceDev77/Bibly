@@ -5,28 +5,25 @@ async function index(req, res) {
     const db = await getDb();
 
     const recentBooks = await db.all(
-      'SELECT id, title, author, image_url FROM books ORDER BY id DESC LIMIT 6'
+      'SELECT id, title, author, image_url FROM books ORDER BY id DESC LIMIT 4'
     );
 
     const totalBooksRow = await db.get('SELECT COUNT(*) AS count FROM books');
 
-    let activeLoans = 0;
-    try {
-      const activeLoansRow = await db.get(
-        "SELECT COUNT(*) AS count FROM loans WHERE status = 'active' OR status IS NULL"
-      );
-      activeLoans = activeLoansRow?.count || 0;
-    } catch (e) {
-      activeLoans = 0; 
-    }
+    const activeLoansRow = await db.get(
+      "SELECT COUNT(*) AS count FROM loans WHERE status = 'ativo'"
+    );
+
+    const totalUsersRow = await db.get("SELECT COUNT(*) AS count FROM users WHERE role != 'admin'");
 
     res.render('index', {
       title: 'Bibly - Sistema de Biblioteca',
       activePage: 'dashboard',
       user: req.session.user || { name: 'Visitante', role: 'guest' },
       stats: {
-        totalBooks: totalBooksRow?.count ?? 0,
-        activeLoans: activeLoans
+        totalBooks: totalBooksRow?.count || 0,
+        activeLoans: activeLoansRow?.count || 0,
+        totalUsers: totalUsersRow?.count || 0
       },
       recentBooks,
     });

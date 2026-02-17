@@ -23,9 +23,12 @@
                         <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         <input type="text" placeholder="Pesquisar título ou autor..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all">
                     </div>
-                    <a href="/livros/novo" class="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-all shadow-md flex items-center justify-center min-w-[50px]">
-                        <i class="fas fa-plus text-xl"></i>
-                    </a>
+                    
+                    <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+                        <a href="/livros/novo" class="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-all shadow-md flex items-center justify-center min-w-[50px]">
+                            <i class="fas fa-plus text-xl"></i>
+                        </a>
+                    <% } %>
                 </div>
             </header>
 
@@ -72,26 +75,22 @@
                 <% } %>
             </div>
 
-            <div class="mt-16 flex items-center justify-center gap-2">
-                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white font-bold rounded-lg shadow-md transition-all">1</button>
-                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">2</button>
-                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">3</button>
-                <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+            <% if (typeof books !== 'undefined' && books.length > 10) { %>
+                <div class="mt-16 flex items-center justify-center gap-2">
+                    <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center bg-indigo-600 text-white font-bold rounded-lg shadow-md transition-all">1</button>
+                    <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">2</button>
+                    <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-600 font-bold hover:bg-gray-50 transition-all">3</button>
+                    <button class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-sm">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            <% } %>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto w-full border-none m-0 p-0">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <script src="/js/main.js"></script>
+    <%- include('partials/footer') %>
 </body>
 </html>

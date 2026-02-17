@@ -11,10 +11,10 @@
 <body class="bg-gray-50 min-h-screen flex flex-col m-0 p-0">
     <nav class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 shadow-lg sticky top-0 z-50 h-[70px]">
         <div class="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
-            <div class="flex items-center text-white text-2xl font-bold">
+            <a href="/" class="flex items-center text-white text-2xl font-bold hover:opacity-90 transition-opacity">
                 <i class="fas fa-book mr-3 text-3xl"></i>
                 <span>Bibly</span>
-            </div>
+            </a>
             <div class="flex items-center gap-3">
                 <a href="/login" class="px-5 py-2 bg-white text-indigo-600 font-bold rounded-full shadow-md hover:bg-gray-100 transition-all">
                     Login
@@ -24,24 +24,30 @@
     </nav>
 
     <main class="flex-grow flex items-center justify-center py-12 px-4">
-        <div class="max-w-md w-full">
-            <div class="text-center mb-10">
+        <div class="max-w-2xl w-full"> <div class="text-center mb-10">
                 <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 text-indigo-600 rounded-3xl mb-4 shadow-inner">
                     <i class="fas fa-user-plus text-3xl"></i>
                 </div>
-                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Novo Membro</h1>
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2 italic">Novo Membro</h1>
                 <p class="text-gray-600 italic font-medium">Crie sua conta para começar a usar a Bibly.</p>
             </div>
 
             <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
-                <form action="/usuarios" method="POST" class="space-y-6">
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 flex items-center gap-3 rounded-r-xl animate-bounce">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span class="font-bold"><%= error %></span>
+                    </div>
+                <% } %>
+                <form action="/usuarios" method="POST" class="space-y-5">
+                    
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
                             <i class="fas fa-user text-indigo-500 mr-2"></i> Nome Completo
                         </label>
                         <div class="relative">
                             <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" name="name" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Seu nome" required>
+                            <input type="text" name="fullName" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Seu nome completo" required>
                         </div>
                     </div>
 
@@ -55,13 +61,66 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
-                            <i class="fas fa-key text-indigo-500 mr-2"></i> Senha
-                        </label>
-                        <div class="relative">
-                            <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="password" name="password" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="••••••••" required>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-phone text-indigo-500 mr-2"></i> Telefone
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" name="phone" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="(00) 00000-0000" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-id-card text-indigo-500 mr-2"></i> CPF
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" name="cpf" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="000.000.000-00" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-calendar text-indigo-500 mr-2"></i> Nascimento
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-calendar absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="date" name="birthDate" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i> Endereço
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" name="address" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Rua, Número, Bairro" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-key text-indigo-500 mr-2"></i> Senha
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" name="password" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">
+                                <i class="fas fa-check-double text-indigo-500 mr-2"></i> Confirmar
+                            </label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" name="confirmPassword" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="••••••••" required>
+                            </div>
                         </div>
                     </div>
 
@@ -83,12 +142,27 @@
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-400 py-8 mt-auto w-full border-none m-0 p-0">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 Bibly. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    <%- include('partials/footer') %>
 
-    <script src="/js/main.js"></script>
+    <script>
+        const phoneInput = document.querySelector('input[name="phone"]');
+        const cpfInput = document.querySelector('input[name="cpf"]');
+
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, "");
+            value = value.replace(/^(\={1,2})/, "");
+            value = value.replace(/^(\d{2})(\d)/g, "($1) $2");
+            value = value.replace(/(\d{5})(\d)/, "$1-$2");
+            e.target.value = value.substring(0, 15);
+        });
+
+        cpfInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, "");
+            value = value.replace(/(\d{3})(\d)/, "$1.$2");
+            value = value.replace(/(\d{3})(\d)/, "$1.$2");
+            value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            e.target.value = value.substring(0, 14);
+        });
+    </script>
 </body>
 </html>
