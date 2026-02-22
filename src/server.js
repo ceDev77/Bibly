@@ -38,11 +38,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.use('/usuarios', requireAdmin, usersRoutes);
+app.use('/usuarios', usersRoutes);
 app.use('/', usersRoutes);
 app.use('/', indexRoutes);
-app.use('/livros', requireAuth, booksRoutes);
-app.use('/emprestimos', requireAuth, loansRoutes);
+app.use('/livros', booksRoutes);
+app.use('/emprestimos', loansRoutes);
 app.use('/', authRoutes);
 app.use('/', requireAdmin, balanceRoutes);
 

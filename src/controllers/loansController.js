@@ -38,9 +38,7 @@ async function create(req, res) {
 async function list(req, res) {
   try {
     const db = await getDb();
-    const user = req.session.user;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const user = req.session.user || { name: 'Visitante', role: 'guest' };
 
     if (!user || user.name === 'Visitante') {
       return res.render('loans', {
@@ -50,6 +48,9 @@ async function list(req, res) {
         loans: []
       });
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     let query = `
       SELECT loans.*, users.name as user_name, books.title as book_title
