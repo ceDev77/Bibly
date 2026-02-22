@@ -11,7 +11,7 @@ async function index(req, res) {
     const totalBooksRow = await db.get('SELECT COUNT(*) AS count FROM books');
 
     const activeLoansRow = await db.get(
-      "SELECT COUNT(*) AS count FROM loans WHERE status = 'ativo'"
+      "SELECT COUNT(*) AS count FROM loans WHERE status IN ('em aberto', 'vencido')"
     );
 
     const totalUsersRow = await db.get("SELECT COUNT(*) AS count FROM users WHERE role != 'admin'");

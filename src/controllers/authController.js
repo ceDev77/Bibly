@@ -1,4 +1,4 @@
-const { findByEmail } = require('../models/userModel');
+const { getDb } = require('../models/database');
 
 function loginForm(req, res) {
   res.render('login', {
@@ -14,7 +14,11 @@ async function login(req, res) {
   const { email, password } = req.body;
 
   try {
-    const user = await findByEmail(email);
+    const db = await getDb();
+    const user = await db.get(
+      'SELECT id, name, email, password, role FROM users WHERE email = ?',
+      [email]
+    );
 
     if (!user) {
       return res.render('login', {

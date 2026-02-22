@@ -1,29 +1,74 @@
 const { getDb } = require('../models/database');
 
+async function create(req, res) {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  
+  try {
+    const { bookId, weeks } = req.body;
+    const userId = req.session.user.id;
+    const db = await getDb();
+    const weeksInt = parseInt(weeks) || 1;
+    const totalPrice = weeksInt * 5.00;
+
+    const result = await db.run(
+      `INSERT INTO loans (user_id, book_id, loan_date, weeks, total_price, status) 
+       VALUES (?, ?, date('now'), ?, ?, 'em aberto')`,
+      [userId, bookId, weeksInt, totalPrice]
+    );
+
+    const loanId = result.lastID;
+
+    await db.run('UPDATE books SET stock = stock - 1 WHERE id = ?', [bookId]);
+    const book = await db.get('SELECT * FROM books WHERE id = ?', [bookId]);
+
+    res.render('book-details', {
+      book,
+      user: req.session.user,
+      loanId: loanId,
+      success: 'Empréstimo solicitado com sucesso!'
+    });
+  } catch (error) {
+    console.error('Erro ao criar empréstimo:', error);
+    res.status(500).send("Erro ao processar empréstimo.");
+  }
+}
+
 async function list(req, res) {
   try {
     const db = await getDb();
+    const user = req.session.user;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
-    if (!req.session.user || req.session.user.name === 'Visitante') {
+
+    if (!user || user.name === 'Visitante') {
       return res.render('loans', {
         title: 'Empréstimos - Bibly',
         activePage: 'loans',
-        user: req.session.user || { name: 'Visitante', role: 'guest' },
+        user: user || { name: 'Visitante', role: 'guest' },
         loans: []
       });
     }
 
-    const loansRaw = await db.all(`
+    let query = `
       SELECT loans.*, users.name as user_name, books.title as book_title
       FROM loans
       JOIN users ON loans.user_id = users.id
       JOIN books ON loans.book_id = books.id
-      ORDER BY loans.id DESC
-    `);
+    `;
+    let params = [];
 
-    const loans = loansRaw.map(loan => {
+    if (user.role !== 'admin') {
+      query += ` WHERE loans.user_id = ?`;
+      params.push(user.id);
+    }
+
+    query += ` ORDER BY loans.id DESC`;
+
+    const loansRaw = await db.all(query, params);
+
+    const loansMapped = loansRaw.map(loan => {
       const loanDate = new Date(loan.loan_date);
       loanDate.setHours(0, 0, 0, 0);
 
@@ -36,63 +81,39 @@ async function list(req, res) {
 
       if (currentStatus === 'fechado') {
         fineValue = loan.final_fine || 0;
-      } else {
-        if (today > dueDate) {
-          currentStatus = 'vencido';
-          const diffTime = today.getTime() - dueDate.getTime();
-          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-          fineValue = diffDays * 2.00; 
-        } else {
-          currentStatus = 'em aberto';
-        }
+      } else if (today > dueDate) {
+        currentStatus = 'vencido';
+        const diffTime = today.getTime() - dueDate.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        fineValue = diffDays * 2.00;
       }
 
       return {
         ...loan,
-        due_date: dueDate.toISOString().split('T')[0],
         status: currentStatus,
-        fine_display: fineValue > 0 ? fineValue.toFixed(2) : '0,00'
+        due_date: dueDate.toLocaleDateString('pt-BR'),
+        loan_date: loanDate.toLocaleDateString('pt-BR'),
+        fine: fineValue.toFixed(2).replace('.', ',')
       };
     });
 
     res.render('loans', {
       title: 'Empréstimos - Bibly',
       activePage: 'loans',
-      user: req.session.user,
-      loans: loans
+      user: user,
+      loans: loansMapped
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erro ao carregar lista de empréstimos.");
-  }
-}
-
-async function create(req, res) {
-  try {
-    const { book_id, weeks } = req.body;
-    const userId = req.session.user.id;
-    const db = await getDb();
-    const weeksInt = parseInt(weeks) || 1;
-    const totalPrice = weeksInt * 5.00;
-
-    const book = await db.get('SELECT stock FROM books WHERE id = ?', [book_id]);
-    if (!book || book.stock <= 0) return res.redirect(`/livros/${book_id}?error=Livro indisponível.`);
-
-    await db.run(
-      `INSERT INTO loans (user_id, book_id, loan_date, weeks, total_price, status) 
-       VALUES (?, ?, date('now'), ?, ?, 'em aberto')`,
-      [userId, book_id, weeksInt, totalPrice]
-    );
-
-    await db.run('UPDATE books SET stock = stock - 1, available = CASE WHEN stock - 1 > 0 THEN 1 ELSE 0 END WHERE id = ?', [book_id]);
-    res.redirect('/emprestimos');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Erro ao processar empréstimo.");
+    console.error('Erro ao listar empréstimos:', error);
+    res.status(500).send("Erro ao carregar empréstimos.");
   }
 }
 
 async function closeLoan(req, res) {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  
   try {
     const { id } = req.params;
     const db = await getDb();
@@ -106,13 +127,16 @@ async function closeLoan(req, res) {
       WHERE loans.id = ?
     `, [id]);
 
-    if (!loan) return res.redirect('/emprestimos?error=Empréstimo não encontrado.');
+    if (!loan) return res.redirect('/emprestimos');
+    
+    if (loan.user_id !== req.session.user.id && req.session.user.role !== 'admin') {
+      return res.status(403).send("Acesso negado");
+    }
 
     const loanDate = new Date(loan.loan_date);
     const dueDate = new Date(loanDate);
     dueDate.setDate(loanDate.getDate() + (loan.weeks * 7));
-    dueDate.setHours(0, 0, 0, 0);
-
+    
     let finalFine = 0;
     if (today > dueDate) {
       const diffTime = today.getTime() - dueDate.getTime();
@@ -120,29 +144,22 @@ async function closeLoan(req, res) {
       finalFine = diffDays * 2.00;
     }
 
-    const totalReceived = loan.total_price + finalFine;
-
     await db.run(
-      `UPDATE loans SET 
-        status = "fechado", 
-        closed_at = date('now'), 
-        final_fine = ? 
-       WHERE id = ?`, 
+      `UPDATE loans SET status = "fechado", closed_at = date('now'), final_fine = ? WHERE id = ?`, 
       [finalFine, id]
     );
 
     await db.run(
       `INSERT INTO balance (loan_id, user_name, amount, received_at) 
        VALUES (?, ?, ?, date('now'))`,
-      [id, loan.user_name, totalReceived]
+      [id, loan.user_name, loan.total_price + finalFine]
     );
 
-    await db.run('UPDATE books SET stock = stock + 1, available = 1 WHERE id = ?', [loan.book_id]);
-
-    res.redirect('/emprestimos?success=Empréstimo encerrado com sucesso.');
+    await db.run('UPDATE books SET stock = stock + 1 WHERE id = ?', [loan.book_id]);
+    res.redirect('/emprestimos');
   } catch (error) {
-    console.error(error);
-    res.redirect('/emprestimos?error=Erro ao encerrar empréstimo.');
+    console.error('Erro ao fechar empréstimo:', error);
+    res.status(500).send("Erro ao fechar empréstimo.");
   }
 }
 

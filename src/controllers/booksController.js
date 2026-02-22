@@ -18,6 +18,10 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+  
   try {
     const { title, author, year, category, isbn, image_url, stock, description } = req.body;
     const db = await getDb();
@@ -72,7 +76,7 @@ async function showDetail(req, res) {
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { title, author, category, isbn, stock, description, year } = req.body;
+    const { title, author, category, isbn, stock, description, year, image_url } = req.body;
     const db = await getDb();
 
     const quantity = parseInt(stock) || 0;
@@ -80,9 +84,9 @@ async function update(req, res) {
 
     await db.run(
       `UPDATE books 
-       SET title = ?, author = ?, category = ?, isbn = ?, stock = ?, available = ?, description = ?, year = ?
+       SET title = ?, author = ?, category = ?, isbn = ?, stock = ?, available = ?, description = ?, year = ?, image_url = ?
        WHERE id = ?`,
-      [title, author, category, isbn, quantity, isAvailable, description, year, id]
+      [title, author, category, isbn, quantity, isAvailable, description, year, image_url, id]
     );
 
     const book = await db.get('SELECT * FROM books WHERE id = ?', [id]);

@@ -7,7 +7,7 @@ let dbPromise;
 async function init() {
   if (!dbPromise) {
     dbPromise = open({
-      filename: path.join(__dirname, '..', '..', 'database.sqlite'),
+      filename: path.join(__dirname, '..', '..', 'data', 'database.sqlite'),
       driver: sqlite3.Database,
     });
 
