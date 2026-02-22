@@ -1,27 +1,56 @@
 # **CSI606-2024-02 - Remoto - Trabalho Final - Resultados**
 
-## *Discente: Princesa Leia (Luke Skywalker)*
-
-<!-- Este documento tem como objetivo apresentar o projeto desenvolvido, considerando o que foi definido na proposta e o produto final. -->
+## *Discente: Chrystian Elias Caldeira da Silva - 23.2.8061*
 
 ### Resumo
 
-  (Apresentar um breve resumo sobre o seu trabalho, indicando o contexto e as principais funcionalidades.)
+Este repositório contém o desenvolvimento de um Sistema de Biblioteca Online chamado Bibly, cujo objetivo é permitir o cadastro, consulta, empréstimo e devolução de livros, além do gerenciamento de usuários, incluindo leitores e administradores.
+O sistema foi desenvolvido para ser simples, eficiente e modular, oferecendo uma experiência próxima ao funcionamento de uma biblioteca real.
 
 ### 1. Funcionalidades implementadas
-<!-- Descrever as funcionalidades que eram previstas e foram implementas. -->
-  
+
+- Cadastro de usuários e login
+- Dashboard inicial: prévia do acervo, prévias de atividade do sistema (número de usuários, empréstimos e livros.)
+- Listagem de livros do sistema com barra de busca
+
+- Visibilidade de usuários comuns:
+  - Detalhes de livros
+  - Pegar livros emprestados
+  - Consultar empréstimos feitos
+  - Edição de dados pessoais
+
+- Visibilidade de administradores:
+  - Editar detalhes de livros
+  - Adicionar livros
+  - Consultar lista de empréstimos realizados por usuários com barra de busca
+  - Fechar empréstimos (confirmar devolução)
+  - Consultar balanço financeiro com filtro temporal
+  - Consulta de dados de usuários com barra de busca
+  - Remoção de usuários
+
 ### 2. Funcionalidades previstas e não implementadas
-<!-- Descrever as funcionalidades que eram previstas e não foram implementas, apresentando uma breve justificativa do porquê elas não foram incluídas -->
+- Módulo de devolução: não foi implementado pois não se adequou a regra de negócio do sistema, seria mais conveniente que apenas um admin (funcionário) confirmasse devoluções realizados, ao invés dos próprios usuários.
 
 ### 3. Outras funcionalidades implementadas
-<!-- Descrever as funcionalidades implementas além daquelas que foram previstas, caso se aplique.  -->
+- Edição de dados pessoais: incialmente não era previsto que o usuário comum pudesse editar dados da sua conta, como telefone e endereço.
 
 ### 4. Principais desafios e dificuldades
-<!-- Descrever os principais desafios encontrados no desenvolvimento do trabalho, quais foram as dificuldades e como elas foram superadas e resolvidas. -->
+- Lógica de empréstimos: a implementação do sistema de empréstimos exigiu uma lógica robusta para o cálculo de datas e multas. Foi desafiador criar funções que cruzassem a data de retirada com a quantidade de semanas solicitada de empréstimo e, ao mesmo tempo, verificasse o status de atraso em tempo real para aplicar as taxas corretas no balanço financeiro. 
+- Disponibilidade: garantir que o estoque de livros fosse atualizado de forma atômica, decrementando na saída e incrementando na devolução, foi crucial para evitar inconsistências.
+- Sincronização de horários e datas: o JavaScript muitas vezes convertia as strings de data do banco para o fuso horário local, o que resultava em exibições de registros com um dia de atraso em relação ao atraso real. Tive que refatorar a forma como as datas eram tratadas no Backend e enviadas para as views, optando por manipulação direta de strings.
 
 ### 5. Instruções para instalação e execução
-<!-- Descrever o que deve ser feito para instalar (ou baixar) a aplicação, o que precisa ser configurando (parâmetros, banco de dados e afins) e como executá-la. -->
+Requisitos:
+- Node.js (Versão 16 ou superior).
+- NPM.
+- SQLite3 (caso abra o banco manualmente).
 
-### 6. Referências
-<!-- Referências podem ser incluídas, caso necessário. Utilize o padrão ABNT. -->
+Instalando:
+- Baixe ou clone o projeto para uma pasta em seu computador.
+- Execute npm install.
+- Para iniciar o servidor, execute node src/server.js.
+- Acesse no navegador http://localhost:3000
+- Crie uma conta de usuário comum!
+- O acesso da conta de administrador é:
+  - e-mail: admin@bibly.com
+  - senha: admin123
