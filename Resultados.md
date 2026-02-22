@@ -5,7 +5,7 @@
 ### Resumo
 
 Este repositório contém o desenvolvimento de um Sistema de Biblioteca Online chamado Bibly, cujo objetivo é facilitar o gerenciamente de uma biblioteca real, funcionando como uma plataforma de registro de livros e controle de empréstimos e das devoluções; após um empréstimo ser solicitado o usuário deve ir a livraria para de fato obter o livro físico, e a devolução, é registrada por um funcionário no sistema quando o livro é retornado; o sistema ainda permite ao administrador ter controle do balanço financeiro total do mês ou do periodo requisitado.
-O sistema foi desenvolvido para ser simples, eficiente e modular, oferecendo uma experiência próxima ao funcionamento de uma biblioteca real.
+O sistema foi desenvolvido para ser simples, eficiente e modular, oferecendo um gerenciamento facilitado e padronizado para uma biblioteca.
 
 ### 1. Funcionalidades implementadas
 
